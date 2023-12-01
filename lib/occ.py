@@ -2,7 +2,7 @@ from .transaction import Action, Timestamp
 
 
 class OCC:
-    def __init__(self, schedule):
+    def __init__(self, schedule, transaction_numbers):
         self.schedule = schedule
 
     def set_schedule(self, schedule):
@@ -54,14 +54,6 @@ class OCC:
             else:
                 print("Here2")
                 return False
-
-        # if (start_list.index(transaction_number) == 0):
-        #     return True
-        # else:
-        #     for s in self.schedule:
-        #         if (s.number == transaction_number):
-
-        #             if (self.__is_transaction_write())
 
 
 

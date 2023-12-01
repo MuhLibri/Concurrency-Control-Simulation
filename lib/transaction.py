@@ -32,3 +32,13 @@ class Timestamp:
     def __init__(self, name, number):
         self.name = name
         self.number = number
+
+
+def get_trannsaction_numbers(schedule):
+    transaction_numbers = []
+    for action in schedule:
+        if (not (action.number in transaction_numbers)):
+            transaction_numbers.append(action.number)
+
+    transaction_numbers.sort()
+    return transaction_numbers

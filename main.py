@@ -8,6 +8,7 @@ import lib.utils as utils
 if __name__ == "__main__":
     schedule_raw = utils.readFile("input/s1.txt")
     schedule = []
+
     print(schedule_raw)
 
     # s = transaction.Transaction(1, schedule)
@@ -27,6 +28,10 @@ if __name__ == "__main__":
         else:
             schedule.append(transaction.Action(action[0], action[1], ""))
 
-    a = occ.OCC(schedule)
+    transaction_numbers = transaction.get_trannsaction_numbers(schedule)
+    print(transaction_numbers)
+
+    a = occ.OCC(schedule, transaction_numbers)
+
 
     a.run()
