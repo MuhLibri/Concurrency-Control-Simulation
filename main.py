@@ -1,12 +1,12 @@
 from lib.transaction import Action, get_transaction_numbers
 from lib.occ import OCC
-# from lib.utils import readFile
+from lib.utils import readFile
 
 
 
 
 if __name__ == "__main__":
-    schedule_raw = utils.readFile("input/tc6.txt")
+    schedule_raw = readFile("input/tc6.txt")
     schedule = []
 
     print("Original Schedule:")
@@ -16,13 +16,13 @@ if __name__ == "__main__":
     for action in schedule_raw:
         bracket_index = action.find("(")
         if (bracket_index != -1):
-            schedule.append(transaction.Action(action[0], action[1:bracket_index], action[bracket_index+1]))
+            schedule.append(Action(action[0], action[1:bracket_index], action[bracket_index+1]))
         else:
-            schedule.append(transaction.Action(action[0], action[1:len(action)], ""))
+            schedule.append(Action(action[0], action[1:len(action)], ""))
 
-    transaction_numbers = transaction.get_trannsaction_numbers(schedule)
+    transaction_numbers = get_transaction_numbers(schedule)
 
-    cc = occ.OCC(schedule, transaction_numbers)
+    cc = OCC(schedule, transaction_numbers)
     final_schedule = cc.run()
 
     print("Final Schedule:")
