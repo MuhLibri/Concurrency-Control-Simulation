@@ -6,32 +6,24 @@ from lib.occ import OCC
 
 
 if __name__ == "__main__":
-    schedule_raw = utils.readFile("input/s1.txt")
+    schedule_raw = utils.readFile("input/tc6.txt")
     schedule = []
 
+    print("Original Schedule:")
     print(schedule_raw)
-
-    # s = transaction.Transaction(1, schedule)
-    # print(s.data)
-    # for s in s.actions:
-    #     print()
-    #     print(s.name)
-    #     print(s.number)
-    #     print(s.data)
-
-    # for s in schedule_raw:
-    #     schedule.append(transaction.Action())
+    print()
 
     for action in schedule_raw:
-        if (len(action) == 5):
-            schedule.append(Action(action[0], action[1], action[3]))
+        bracket_index = action.find("(")
+        if (bracket_index != -1):
+            schedule.append(transaction.Action(action[0], action[1:bracket_index], action[bracket_index+1]))
         else:
-            schedule.append(Action(action[0], action[1], ""))
+            schedule.append(transaction.Action(action[0], action[1:len(action)], ""))
 
-    transaction_numbers = get_transaction_numbers(schedule)
-    print(transaction_numbers)
+    transaction_numbers = transaction.get_trannsaction_numbers(schedule)
 
-    a = OCC(schedule, transaction_numbers)
+    cc = occ.OCC(schedule, transaction_numbers)
+    final_schedule = cc.run()
 
-
-    a.run()
+    print("Final Schedule:")
+    print(final_schedule)
