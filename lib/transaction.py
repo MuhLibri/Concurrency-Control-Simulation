@@ -7,6 +7,9 @@ class Action:
         self.number = int(number)
         self.data = data
 
+    def __repr__(self) -> str:
+        return self.name + str(self.number) + self.data
+
 
 class Transaction:
     def __init__(self, number, schedule):
@@ -46,48 +49,60 @@ class Lock:
         self.number = number
         self.data = data
 
+    def __repr__(self) -> str:
+        return self.type.name + str(self.number) + self.data
+
 def can_acquire_lock(acquired_list : List[Lock], type : LockType, number : int, data : str):
     if type == LockType['X']:
         for _lock in acquired_list:
             # another Transaction acquired the lock
             if _lock.data == data and _lock.number != number:
                 return False
-            
+        
         return True
         
     else: # LockType['S']
+        # print('asd', acquired_list)
         for _lock in acquired_list:
             # another Transaction acquired X Lock of it
             if _lock.data == data and _lock.number != number and _lock.type == LockType['X']:
                 return False
             
+        # print('lah bisa')
         return True
 
 def is_there_lock(acquired_list : List[Lock], type : LockType, number : int, data : str):
     for _lock in acquired_list:
         if _lock.type == type and _lock.number == number and _lock.data == data:
-            return False
-        
-    return True
+            return True
+    
+    return False
 
 # def need_acquire_lock(acquired_list : List[Lock], action : Action):
 #     if action.name == 'R':
 #         if 
-def update_acquired_lock(acquired_list : List[Lock], action : Action):
+def update_acquired_lock(acquired_list : List[Lock], action : Action) -> Lock:
     if action.name == 'R':
         # can we acquire S lock
-            if can_acquire_lock(acquired_list, LockType['S'], action.number, action.data) :
-                # is the corresponding lock already exists
-                if not (is_there_lock(acquired_list, LockType['X'], action.number, action.data) or is_there_lock(acquired_list, LockType['S'], action.number, action.data)):
-                    acquired_list.append(Lock(LockType['S'], action.number, action.data))
+        if can_acquire_lock(acquired_list, LockType['S'], action.number, action.data) :
+            # is the corresponding lock already exists
+            if not (is_there_lock(acquired_list, LockType['X'], action.number, action.data) or is_there_lock(acquired_list, LockType['S'], action.number, action.data)):
+                new_lock = Lock(LockType['S'], action.number, action.data)
+                acquired_list.append(new_lock)
+
+                return new_lock
 
     elif action.name == 'W':
+        print("hea")
          # can we acquire X lock
-            if can_acquire_lock(acquired_list, LockType['X'], action.number, action.data) :
-                # is the corresponding lock already exists
-                if not (is_there_lock(acquired_list, LockType['X'], action.number, action.data)):
-                    acquired_list.append(Lock(LockType['S'], action.number, action.data))
-    
+        if can_acquire_lock(acquired_list, LockType['X'], action.number, action.data) :
+            # is the corresponding lock already exists
+            if not (is_there_lock(acquired_list, LockType['X'], action.number, action.data)):
+                new_lock = Lock(LockType['X'], action.number, action.data)
+                acquired_list.append(new_lock)
+
+                return new_lock
+
                         
 def get_transaction_numbers(schedule):
     transaction_numbers = []

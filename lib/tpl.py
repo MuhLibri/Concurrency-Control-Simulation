@@ -53,13 +53,30 @@ class TPL: # Two Phase Locking Protocol
 
         transaction_ran = []
 
-        transaction_onhold = []
-        action_onhold = []
+        transaction_blocked = []
+        action_blocked = []
 
         lock_acquired : List[Lock] = []
 
         while len(schedule) != 0:
             current_action : Action = schedule.pop(0)
+
+            print(current_action.name, '->>', len(schedule))
+            print('asdasd', len(schedule), len(action_blocked))
+            if (len(schedule) == 0 and len(action_blocked) != 0):
+                print(action_blocked, 'sini2')
+                schedule = action_blocked
+                action_blocked = []
+
+                transaction_blocked = []
+
+                # print(schedule)
+
+            # If transaction blocked
+            if current_action.number in transaction_blocked:
+                action_blocked.append(current_action)
+
+                continue
 
             # New Transaction Start
             if not (current_action.number in transaction_ran):
@@ -73,6 +90,7 @@ class TPL: # Two Phase Locking Protocol
                     # update lock acquired
                     update_acquired_lock(lock_acquired, current_action)
 
+                    print(lock_acquired)
                     # can read
                     print(f"[Transaction {current_action.number}] read {current_action.data}")
                     final_schedule.append(f"R{current_action.number}({current_action.data})")
@@ -80,29 +98,59 @@ class TPL: # Two Phase Locking Protocol
                     continue
                 
                 # put it on hold
-                action_onhold.append(current_action)
+                action_blocked.append(current_action)
+                print(action_blocked, 'sini')
 
                 # mark transaction on hold
-                if not (current_action.number in transaction_onhold):
-                    transaction_onhold.append(current_action.number)
+                if not (current_action.number in transaction_blocked):
+                    transaction_blocked.append(current_action.number)
 
-                print(f"Resource {current_action.data} is being Exclusively Locked by Transaction {current_action.number}")
-                print(f"[Blocked]\t[Transaction {current_action.number}] read {current_action.data}")
+                # print(f"Resource {current_action.data} is being Exclusively Locked by Transaction {current_action.number}")
+                print(f"[Blocked] - [Transaction {current_action.number}] read {current_action.data}")
+                print(f"Resource {current_action.data} is being Exclusively Locked")
                 
             # Write Operation
             elif (current_action.name == "W"):
                 # can we acquire X lock / can we write
-                if can_acquire_lock(lock_acquired, LockType['X'], current_action):
-                    update_acquired_lock(lock_acquired, current_action)
+                if can_acquire_lock(lock_acquired, LockType['X'], current_action.number, current_action.data):
+                    _new_lock = update_acquired_lock(lock_acquired, current_action)
+
+                    final_schedule.append(f"{_new_lock.type.name}L{current_action.number}({current_action.data})")
 
                     print(f"[Transaction {current_action.number}] write {current_action.data}")
-                    final_schedule.append(f"R{current_action.number}({current_action.data})")
+                    final_schedule.append(f"W{current_action.number}({current_action.data})")
 
-                print(f"Resource {current_action.data} is being Locked by Transaction {current_action.number}")
-                print(f"[Blocked]\t[Transaction {current_action.number}] write {current_action.data}")
+                    continue
+
+                print(f"Resource {current_action.data} is being Locked by a Transaction")
+                print(f"[Blocked] - [Transaction {current_action.number}] write {current_action.data}")
+
+                if not current_action.number in transaction_blocked:
+                    transaction_blocked.append(current_action.number)
+
+                action_blocked.append(current_action)
                 # write_list.append(current_action)
+
+             # Commit Operation
+            elif (current_action.name == "C"):
+                print("bef", lock_acquired)
+                _to_remove = []
+                # remove all locks
+                for i in range(len(lock_acquired)):
+                    if lock_acquired[i].number == current_action.number:
+                        _to_remove.append(i)
+
+                # remove from back, carefully
+                for i in _to_remove[::-1]:
+                    # print(i)
+                    final_schedule.append(f"UL{current_action.number}({lock_acquired[i].data})")
+                    lock_acquired.pop(i)
+
+                print("aft", lock_acquired)
             else:
-                pass
+                print('else')
+
+            
                     
         print("----------------------------------------------")
         print("Two Phase Locking Concurency Control Finished\n")
