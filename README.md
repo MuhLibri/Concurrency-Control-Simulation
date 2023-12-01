@@ -6,8 +6,9 @@ In this repository, there are two concurency control: Two-Phase Locking (2PL) an
 
 ## How To run
 1. Make `.txt` file containing the schedule in the input folder. Example can be seen on `tc1.txt`-`tc5.txt`
-2. Open terminal in the root folder of this repository
-3. Type `python main.py`
+2. Ganti text pada readfile sesuai dengan nama file
+3. Open terminal in the root folder of this repository
+4. Type `python main.py`
 
 ## Valid Input
 - R`transaction number`(`data`)
