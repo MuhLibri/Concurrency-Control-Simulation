@@ -50,7 +50,7 @@ class Lock:
         self.data = data
 
     def __repr__(self) -> str:
-        return self.type.name + str(self.number) + self.data
+        return self.type.name + 'L' + str(self.number) + '(' + self.data + ')'
 
 def can_acquire_lock(acquired_list : List[Lock], type : LockType, number : int, data : str):
     if type == LockType['X']:
@@ -93,7 +93,6 @@ def update_acquired_lock(acquired_list : List[Lock], action : Action) -> Lock:
                 return new_lock
 
     elif action.name == 'W':
-        print("hea")
          # can we acquire X lock
         if can_acquire_lock(acquired_list, LockType['X'], action.number, action.data) :
             # is the corresponding lock already exists
