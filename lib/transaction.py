@@ -34,7 +34,7 @@ class Timestamp:
         self.number = number
 
 
-def get_trannsaction_numbers(schedule):
+def get_transaction_numbers(schedule):
     transaction_numbers = []
     for action in schedule:
         if (not (action.number in transaction_numbers)):

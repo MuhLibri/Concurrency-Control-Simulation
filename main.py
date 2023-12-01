@@ -1,6 +1,6 @@
-import lib.transaction as transaction
-import lib.occ as occ
-import lib.utils as utils
+from lib.transaction import Action, get_transaction_numbers
+from lib.occ import OCC
+# from lib.utils import readFile
 
 
 
@@ -24,14 +24,14 @@ if __name__ == "__main__":
 
     for action in schedule_raw:
         if (len(action) == 5):
-            schedule.append(transaction.Action(action[0], action[1], action[3]))
+            schedule.append(Action(action[0], action[1], action[3]))
         else:
-            schedule.append(transaction.Action(action[0], action[1], ""))
+            schedule.append(Action(action[0], action[1], ""))
 
-    transaction_numbers = transaction.get_trannsaction_numbers(schedule)
+    transaction_numbers = get_transaction_numbers(schedule)
     print(transaction_numbers)
 
-    a = occ.OCC(schedule, transaction_numbers)
+    a = OCC(schedule, transaction_numbers)
 
 
     a.run()
