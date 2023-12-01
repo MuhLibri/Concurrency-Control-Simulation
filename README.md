@@ -10,8 +10,8 @@ In this repository, there are two concurency control: Two-Phase Locking (2PL) an
 3. Type `python main.py`
 
 ## Valid Input
-- R`number`(`data`)
-- W`number`(`alphabet`)
-- C`number`
+- R`transaction number`(`data`)
+- W`transaction number`(`data`)
+- C`transaction number`
 
 example: `R1(A); R2(B); W1(B); C2; C1`
