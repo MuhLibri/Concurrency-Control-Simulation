@@ -1,5 +1,6 @@
 from lib.transaction import Action, get_transaction_numbers
 from lib.occ import OCC
+from lib.tpl import TPL
 from lib.utils import readFile
 
 
@@ -23,6 +24,9 @@ if __name__ == "__main__":
     transaction_numbers = get_transaction_numbers(schedule)
 
     cc = OCC(schedule, transaction_numbers)
+    cc = TPL(schedule, transaction_numbers)
+
+
     final_schedule = cc.run()
 
     print("Final Schedule:")
